@@ -1,0 +1,30 @@
+name: Publish validate artifacts draft release
+
+on:
+  workflow_run:
+    workflows:
+      - Validate repository content
+    types:
+      - completed
+
+permissions:
+  contents: write
+
+jobs:
+  publish-draft-release:
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      (github.event.workflow_run.head_branch == 'main' || github.event.workflow_run.head_branch == 'master')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Publish generated markdown draft release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: bash scripts/publish-validate-artifacts-draft-release.sh
