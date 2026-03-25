@@ -1,0 +1,30 @@
+name: Validate repository content
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run frontmatter lint
+        run: python scripts/lint-frontmatter.py
+
+      - name: Run index validation
+        run: python scripts/validate-index.py
+
+      - name: Run markdown link checks
+        run: python scripts/check-links.py

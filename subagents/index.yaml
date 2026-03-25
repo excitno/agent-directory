@@ -1,0 +1,8 @@
+entries:
+- id: example-subagent-id
+  path: example-subagent.md
+  category: orchestration
+  tags: orchestration,planning
+  version: v0.1.0
+  owner: platform-team
+  status: draft
