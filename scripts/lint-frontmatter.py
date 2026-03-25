@@ -83,6 +83,11 @@ def parse_frontmatter(text: str) -> tuple[dict[str, str | list[str]], list[str]]
         if block_scalar_key is not None:
             # YAML block scalars continue on indented lines.
             if raw_line.startswith(" ") or raw_line.startswith("\t"):
+                block_line = raw_line.strip()
+                if block_line:
+                    existing = data.get(block_scalar_key)
+                    if isinstance(existing, str):
+                        data[block_scalar_key] = f"{existing}\n{block_line}" if existing else block_line
                 continue
             block_scalar_key = None
 
@@ -106,7 +111,10 @@ def parse_frontmatter(text: str) -> tuple[dict[str, str | list[str]], list[str]]
         key, value = line.split(":", 1)
         key = key.strip()
         value = value.strip()
-        data[key] = value
+        if value in {">", "|", ">-", "|-"}:
+            data[key] = ""
+        else:
+            data[key] = value
         list_indent_key = key if value == "" else None
         block_scalar_key = key if value in {">", "|", ">-", "|-"} else None
 
