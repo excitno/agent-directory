@@ -61,7 +61,7 @@ STATUS_VALUES = {"draft", "active", "deprecated"}
 PROMPT_TYPES = {"system", "user", "assistant", "workflow"}
 
 
-def parse_frontmatter(text: str) -> tuple[dict[str, str], list[str]]:
+def parse_frontmatter(text: str) -> tuple[dict[str, str | list[str]], list[str]]:
     lines = text.splitlines()
     if not lines or lines[0].strip() != "---":
         return {}, ["missing opening frontmatter delimiter ('---')"]
@@ -70,7 +70,7 @@ def parse_frontmatter(text: str) -> tuple[dict[str, str], list[str]]:
     if end_idx is None:
         return {}, ["missing closing frontmatter delimiter ('---')"]
 
-    data: dict[str, str] = {}
+    data: dict[str, str | list[str]] = {}
     errors: list[str] = []
     list_indent_key = None
     block_scalar_key = None
@@ -90,6 +90,13 @@ def parse_frontmatter(text: str) -> tuple[dict[str, str], list[str]]:
         if line.lstrip().startswith("- "):
             if list_indent_key is None:
                 errors.append(f"list item without a parent key: '{line.strip()}'")
+            else:
+                list_value = line.lstrip()[2:].strip()
+                existing = data.get(list_indent_key)
+                if isinstance(existing, list):
+                    existing.append(list_value)
+                elif existing == "":
+                    data[list_indent_key] = [list_value]
             continue
 
         if ":" not in line:
@@ -113,6 +120,12 @@ def collect_markdown_files(root: Path, section: str) -> list[Path]:
     return sorted(path for path in base.rglob("*.md") if path.name != "index.md")
 
 
+def _is_empty_required_value(value: str | list[str]) -> bool:
+    if isinstance(value, list):
+        return len(value) == 0 or all(not item.strip() for item in value)
+    return not value.strip()
+
+
 def validate_file(path: Path, section: str) -> tuple[list[str], str | None]:
     text = path.read_text(encoding="utf-8")
     data, errors = parse_frontmatter(text)
@@ -121,28 +134,30 @@ def validate_file(path: Path, section: str) -> tuple[list[str], str | None]:
     if errors:
         return [f"{path}: {err}" for err in errors], None
 
-    missing = REQUIRED_FIELDS[section] - set(data)
-    for key in sorted(missing):
+    missing = sorted(
+        key for key in REQUIRED_FIELDS[section] if key not in data or _is_empty_required_value(data[key])
+    )
+    for key in missing:
         field_errors.append(f"{path}: missing required frontmatter field '{key}'")
 
     file_id = data.get("id")
-    if file_id and not ID_PATTERN.match(file_id):
+    if isinstance(file_id, str) and file_id and not ID_PATTERN.match(file_id):
         field_errors.append(f"{path}: invalid id '{file_id}' (must be snake-safe kebab-case)")
 
     version = data.get("version")
-    if version and not VERSION_PATTERN.match(version):
+    if isinstance(version, str) and version and not VERSION_PATTERN.match(version):
         field_errors.append(f"{path}: invalid version '{version}' (expected vMAJOR.MINOR.PATCH)")
 
     status = data.get("status")
-    if status and status not in STATUS_VALUES:
+    if isinstance(status, str) and status and status not in STATUS_VALUES:
         field_errors.append(f"{path}: invalid status '{status}'")
 
     if section == "prompts":
         prompt_type = data.get("prompt_type")
-        if prompt_type and prompt_type not in PROMPT_TYPES:
+        if isinstance(prompt_type, str) and prompt_type and prompt_type not in PROMPT_TYPES:
             field_errors.append(f"{path}: invalid prompt_type '{prompt_type}'")
 
-    return field_errors, file_id
+    return field_errors, file_id if isinstance(file_id, str) else None
 
 
 def main() -> int:
