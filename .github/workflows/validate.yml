@@ -7,24 +7,29 @@ on:
       - main
       - master
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 jobs:
   validate:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
-      - name: Run frontmatter lint
-        run: python scripts/lint-frontmatter.py
+      - name: Run validation scripts
+        run: bash scripts/run-validate.sh
 
-      - name: Run index validation
-        run: python scripts/validate-index.py
-
-      - name: Run markdown link checks
-        run: python scripts/check-links.py
+      - name: Upload validation artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-reports
+          path: artifacts/validate/
+          if-no-files-found: error
