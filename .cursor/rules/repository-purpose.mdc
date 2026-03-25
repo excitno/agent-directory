@@ -1,0 +1,12 @@
+---
+description: Direction for the agent-directory repository
+alwaysApply: true
+---
+
+# Purpose and scope
+
+- This repository is used to store and maintain subagents, skills, and prompts.
+- Keep content modular, reusable, and easy to discover.
+- Use snake-case for service/app names and folder/file names.
+- Do not add README files that summarize completed work unless explicitly requested.
+- Avoid nice-to-have functionality; deliver only what is required by the request.

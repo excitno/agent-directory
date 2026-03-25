@@ -1,0 +1,13 @@
+---
+description: Workflow, quality, and review requirements
+alwaysApply: true
+---
+
+# Workflow and quality
+
+- Prefer diagnosis before fixes unless the user explicitly asks for direct implementation.
+- A code review must be systematic and cover all files in the pull request.
+- During review, findings must be written to a Markdown report file.
+- Keep pull requests small and easy to review; target a maximum of about 500 changed lines.
+- Lint and format code according to the project setup before committing.
+- For new functionality, clarify feature-flag usage in environment variables early.

@@ -1,0 +1,13 @@
+---
+description: Standards for subagents, skills, and prompts
+alwaysApply: true
+---
+
+# Content standards
+
+- New subagents, skills, and prompts must describe purpose, input, output, and constraints.
+- Document security and error handling where relevant.
+- Use clear metadata fields in Markdown/YAML frontmatter when required by the artifact type.
+- Keep descriptions short, concrete, and actionable.
+- Avoid unnecessary visual embellishments or emoticons in documentation.
+- Do not add comments in JSON files.

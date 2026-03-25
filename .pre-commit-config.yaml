@@ -1,0 +1,18 @@
+repos:
+  - repo: local
+    hooks:
+      - id: lint-frontmatter
+        name: lint-frontmatter
+        entry: python scripts/lint-frontmatter.py
+        language: system
+        pass_filenames: false
+      - id: validate-index
+        name: validate-index
+        entry: python scripts/validate-index.py
+        language: system
+        pass_filenames: false
+      - id: check-links
+        name: check-links
+        entry: python scripts/check-links.py
+        language: system
+        pass_filenames: false
