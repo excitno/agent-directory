@@ -66,9 +66,8 @@ def parse_frontmatter(text: str) -> tuple[dict[str, str], list[str]]:
     if not lines or lines[0].strip() != "---":
         return {}, ["missing opening frontmatter delimiter ('---')"]
 
-    try:
-        end_idx = lines[1:].index("---") + 1
-    except ValueError:
+    end_idx = next((idx for idx, line in enumerate(lines[1:], start=1) if line.strip() == "---"), None)
+    if end_idx is None:
         return {}, ["missing closing frontmatter delimiter ('---')"]
 
     data: dict[str, str] = {}
