@@ -19,6 +19,36 @@ It is optimized for Markdown/YAML-first authoring with automated quality checks 
 - `.cursor/rules/`: persistent Cursor guidance for this repository
 - `.github/workflows/`: CI quality gates
 
+## Install and use skills, subagents, and prompts
+
+Artifacts here are plain Markdown with YAML frontmatter. There is no package installer: clone or copy this repository, then wire files into the client you use.
+
+### Get the files
+
+- Clone this repository, or add it as a submodule in a project that should track versions of these assets.
+- Browse `skills/`, `subagents/`, and `prompts/` and use the matching `index.yaml` to find entries.
+
+### Skills (Cursor)
+
+Cursor loads skills from a directory that contains `SKILL.md`:
+
+- User-wide: `~/.cursor/skills/<skill-folder>/SKILL.md`
+- Project: `.cursor/skills/<skill-folder>/SKILL.md`
+
+Copy or adapt a file from `skills/<name>.md` into that layout. Cursor’s skill format expects YAML frontmatter with at least `name` and `description`; map from this repo (for example set `description` from `purpose` when you only have the catalog fields here). Other agents may use different paths or filenames—follow that product’s documentation and keep this repository as the canonical text.
+
+### Subagents
+
+Subagent definitions live in `subagents/<name>.md`. Copy them into your project or leave them in a checkout of this repo, then reference the path from your agent setup (for example orchestration instructions or `AGENTS.md`) so dispatched runs can read the frontmatter contract.
+
+### Prompts
+
+Prompts live in `prompts/<name>.md`. Install them by copying into your prompt library, Cursor rules, or team docs, or reference the file directly in the client if it supports file context (for example `@path/to/prompt.md`).
+
+### After install
+
+Open the target path in your editor and confirm your tool discovers or invokes the asset. Run the validation scripts in this repo only when you change artifacts here before contributing.
+
 ## Add a new subagent, skill, or prompt
 
 1. Copy the relevant template from `templates/`.
