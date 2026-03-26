@@ -27,8 +27,10 @@ Artifacts here are plain Markdown with YAML frontmatter. The recommended install
 
 Run from the repository root:
 
-- Linux/macOS: `bash scripts/install.sh`
-- Windows (Git Bash): `bash scripts/install.sh`
+```bash
+# Linux/macOS or Windows (Git Bash)
+bash scripts/install.sh
+```
 
 What the script does:
 
