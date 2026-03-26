@@ -6,7 +6,7 @@ Contribute only subagents, skills, prompts, schemas, templates, scripts, and gov
 
 ## Naming standards
 
-- Use snake-case for service/app names where applicable.
+- Use kebab-case for service/app names where applicable.
 - Use kebab-case IDs in frontmatter (for example `my-skill-id`).
 - Keep file names clear and domain-specific.
 
