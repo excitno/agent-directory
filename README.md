@@ -21,7 +21,22 @@ It is optimized for Markdown/YAML-first authoring with automated quality checks 
 
 ## Install and use skills, subagents, and prompts
 
-Artifacts here are plain Markdown with YAML frontmatter. There is no package installer: clone or copy this repository, then wire files into the client you use.
+Artifacts here are plain Markdown with YAML frontmatter. The recommended install method is to run the repository install script. Manual copy remains fully supported.
+
+### Recommended: install script (copy mode)
+
+Run from the repository root:
+
+- Linux/macOS: `bash scripts/install.sh`
+- Windows (Git Bash): `bash scripts/install.sh`
+
+What the script does:
+
+- Detects compatible client directories automatically (Cursor global/project, Claude Code, Gemini CLI, Copilot).
+- Copies artifacts from `skills/`, `subagents/`, and `prompts/` into detected destinations.
+- Prints frequent status messages in English for each step.
+- Skips existing files by default and logs warnings; use `--overwrite` to replace files.
+- Uses copy mode only (no symlink setup). Re-run the script whenever you want to update installed files.
 
 ### Get the files
 
@@ -36,6 +51,11 @@ Cursor loads skills from a directory that contains `SKILL.md`:
 - Project: `.cursor/skills/<skill-folder>/SKILL.md`
 
 Copy or adapt a file from `skills/<name>.md` into that layout. Cursor’s skill format expects YAML frontmatter with at least `name` and `description`; map from this repo (for example set `description` from `purpose` when you only have the catalog fields here). Other agents may use different paths or filenames—follow that product’s documentation and keep this repository as the canonical text.
+
+### Manual install (alternative)
+
+If you do not want to run the script, copy files manually from this repository into your tool-specific directories.
+The existing guidance below remains valid for manual installation.
 
 ### Subagents
 
